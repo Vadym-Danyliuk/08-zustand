@@ -9,15 +9,13 @@ import css from './NotesPage.module.css';
 import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
 import NoteList from '@/components/NoteList/NoteList';
-import Modal from '@/components/Modal/Modal';
-import NoteForm from '@/components/NoteForm/NoteForm';
+import Link from 'next/link';
 
 interface NotesClientProps {
   tag: string;
 }
 
 const NotesClient = ({ tag }: NotesClientProps) => {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
 
@@ -32,18 +30,10 @@ const NotesClient = ({ tag }: NotesClientProps) => {
     setPage(page);
   };
 
-  const handleOpenModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalIsOpen(false);
-  };
-
-const handleSearch = useDebouncedCallback((query: string) => {
-  setSearch(query);
-  setPage(1);
-}, 500);
+  const handleSearch = useDebouncedCallback((query: string) => {
+    setSearch(query);
+    setPage(1);
+  }, 500);
 
   return (
     <div className={css.app}>
@@ -56,18 +46,13 @@ const handleSearch = useDebouncedCallback((query: string) => {
             onChange={handlePageChange}
           />
         )}
-        <button onClick={handleOpenModal} type="button" className={css.button}>
+        <Link href="/notes/action/create" className={css.button}>
           Створити нотатку <RiAddBoxFill />
-        </button>
+        </Link>
       </header>
 
       {isSuccess && data && data.notes.length > 0 && (
         <NoteList notes={data.notes} />
-      )}
-     {modalIsOpen && (
-        <Modal closeModal={handleCloseModal}>
-          <NoteForm />
-        </Modal>
       )}
     </div>
   );

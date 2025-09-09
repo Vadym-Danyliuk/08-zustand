@@ -1,7 +1,8 @@
+import type { Metadata } from 'next';
 import NoteForm from '@/components/NoteForm/NoteForm';
 import css from './CreateNote.module.css';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Створити нотатку — NoteHub',
   description: 'Сторінка для створення нової нотатки з підтримкою чернетки.',
   openGraph: {
