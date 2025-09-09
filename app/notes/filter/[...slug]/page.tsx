@@ -8,11 +8,12 @@ import {
 import type { Metadata } from 'next';
 
 interface NotesProps {
-  params: { slug?: string[] };
+  params: Promise<{ slug?: string[] }>;
 }
 
 export async function generateMetadata({ params }: NotesProps): Promise<Metadata> {
-  const tag = decodeURIComponent(params.slug?.[0] || 'all');
+  const resolvedParams = await params;
+  const tag = decodeURIComponent(resolvedParams.slug?.[0] || 'all');
   const title = `Нотатки: ${tag}`;
   const description = `Перегляд нотаток з категорії "${tag}"`;
 
@@ -29,13 +30,19 @@ export async function generateMetadata({ params }: NotesProps): Promise<Metadata
 }
 
 export default async function Notes({ params }: NotesProps) {
-  const tag = decodeURIComponent(params.slug?.[0] || 'all');
+  const resolvedParams = await params;
+  const tag = decodeURIComponent(resolvedParams.slug?.[0] || 'all');
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ['notes', 1, '', tag],
-    queryFn: () => fetchNotes(1, '', tag),
-  });
+  try {
+    await queryClient.prefetchQuery({
+      queryKey: ['notes', 1, '', tag],
+      queryFn: () => fetchNotes(1, '', tag),
+    });
+  } catch (error) {
+   
+    console.warn('Failed to prefetch notes:', error);
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

@@ -8,7 +8,8 @@ import { useNoteStore } from '@/lib/store/noteStore';
 import css from './NoteForm.module.css';
 import { RiAdminFill, RiRemixRunFill } from 'react-icons/ri';
 
-interface NoteFormProps {
+export interface NoteFormProps {
+  closeModal?: () => void;
   noteId?: string;
 }
 
