@@ -64,7 +64,11 @@ const handleSearch = useDebouncedCallback((query: string) => {
       {isSuccess && data && data.notes.length > 0 && (
         <NoteList notes={data.notes} />
       )}
-    
+     {modalIsOpen && (
+        <Modal closeModal={handleCloseModal}>
+          <NoteForm />
+        </Modal>
+      )}
     </div>
   );
 };
